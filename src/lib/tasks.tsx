@@ -37,7 +37,7 @@ export async function getAllTaskIds(): Promise<AllTaskIdsResponse[]> {
   })
 }
 
-export async function getTaskData(id: number): Promise<TasksData> {
+export async function getTaskData(id: string): Promise<TasksData> {
   const res = await fetch(new URL(`${SERVERURL}api/detail-task/${id}/`))
   const task = await res.json()
 
