@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+// @ts-nocheck
 import { createContext, useState } from 'react'
 
 export const StateContext = createContext()

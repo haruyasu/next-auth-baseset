@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+import { NextPage } from 'next'
 import Link from 'next/link'
 import { useContext } from 'react'
 import Cookie from 'universal-cookie'
@@ -8,15 +10,25 @@ const cookie = new Cookie()
 
 const SERVERURL = 'http://127.0.0.1:8000/'
 
-export default function Task({ task, taskDeleted }) {
+interface Props {
+  task: {
+    id: number
+    title: string
+  }
+  taskDeleted: () => void
+}
+
+const Task: NextPage<Props> = ({ task, taskDeleted }) => {
   const { setSelectedTask } = useContext(StateContext)
 
-  const deleteTask = async () => {
+  const deleteTask = async (): Promise<void> => {
+    const accessToken = cookie.get('access_token')
+
     await fetch(`${SERVERURL}api/tasks/${task.id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `JWT ${cookie.get('access_token')}`
+        Authorization: `JWT ${accessToken}`
       }
     }).then((res) => {
       if (res.status === 401) {
@@ -69,3 +81,5 @@ export default function Task({ task, taskDeleted }) {
     </div>
   )
 }
+
+export default Task

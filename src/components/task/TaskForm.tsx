@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+import { NextPage } from 'next'
 import { useContext } from 'react'
 import Cookie from 'universal-cookie'
 
@@ -6,17 +8,23 @@ import { StateContext } from '../../context/StateContext'
 const cookie = new Cookie()
 const SERVERURL = 'http://127.0.0.1:8000/'
 
-export default function TaskForm({ taskCreated }) {
+interface Props {
+  taskCreated: () => void
+}
+
+const TaskForm: NextPage<Props> = ({ taskCreated }) => {
   const { selectedTask, setSelectedTask } = useContext(StateContext)
 
-  const create = async (e) => {
+  const create = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
+    const accessToken = cookie.get('access_token')
+
     await fetch(`${SERVERURL}api/tasks/`, {
       method: 'POST',
       body: JSON.stringify({ title: selectedTask.title }),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `JWT ${cookie.get('access_token')}`
+        Authorization: `JWT ${accessToken}`
       }
     }).then((res) => {
       if (res.status === 401) {
@@ -27,7 +35,7 @@ export default function TaskForm({ taskCreated }) {
     taskCreated()
   }
 
-  const update = async (e) => {
+  const update = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
     await fetch(`${SERVERURL}api/tasks/${selectedTask.id}/`, {
       method: 'PUT',
@@ -65,3 +73,5 @@ export default function TaskForm({ taskCreated }) {
     </div>
   )
 }
+
+export default TaskForm
