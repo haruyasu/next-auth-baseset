@@ -1,7 +1,7 @@
+import { NextPage } from 'next'
 import Link from 'next/link'
-import { ReactElement } from 'react'
 
-export default function Navigation(): ReactElement {
+const Navigation: NextPage = () => {
   return (
     <header className="container flex flex-row items-center mx-auto px-5 py-5 max-w-screen-xl">
       <Link href="/">
@@ -22,3 +22,5 @@ export default function Navigation(): ReactElement {
     </header>
   )
 }
+
+export default Navigation

@@ -2,14 +2,14 @@
 
 // const SERVERURL = 'http://127.0.0.1:8000/'
 
-export interface AllPostsDataResponse {
+export interface PostsData {
   content: string
   created_at: string
   id: number
   title: string
 }
 
-export async function getAllPostsData(): Promise<AllPostsDataResponse[]> {
+export async function getAllPostsData(): Promise<PostsData[]> {
   // const res = await fetch(new URL(`${SERVERURL}api/list-post/`))
   // const posts = await res.json()
 
@@ -65,14 +65,7 @@ export async function getAllPostIds(): Promise<AllPostIdsResponse[]> {
   })
 }
 
-export interface PostDataResponse {
-  content: string
-  created_at: string
-  id: number
-  title: string
-}
-
-export async function getPostData(id: number): Promise<PostDataResponse> {
+export async function getPostData(id: string): Promise<PostsData> {
   // const res = await fetch(new URL(`${SERVERURL}api/detail-post/${id}/`))
   // const post = await res.json()
 

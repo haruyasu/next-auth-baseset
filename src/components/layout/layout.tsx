@@ -1,8 +1,8 @@
-import { ReactElement } from 'react'
+import { NextPage } from 'next'
 
 import Navigation from './navigation'
 
-export default function Layout(props: any): ReactElement {
+const Layout: NextPage = (props: any) => {
   return (
     <div className="flex flex-col min-h-screen">
       <Navigation />
@@ -15,3 +15,5 @@ export default function Layout(props: any): ReactElement {
     </div>
   )
 }
+
+export default Layout

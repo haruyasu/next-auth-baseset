@@ -1,5 +1,6 @@
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { ReactElement } from 'react'
+import { ParsedUrlQuery } from 'querystring'
 
 import { getAllPostIds, getPostData } from '../../lib/posts'
 
@@ -12,7 +13,7 @@ interface PostProps {
   }
 }
 
-export default function PostData({ post }: PostProps): ReactElement {
+const PostData: NextPage<PostProps> = ({ post }) => {
   const router = useRouter()
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -30,12 +31,9 @@ export default function PostData({ post }: PostProps): ReactElement {
   )
 }
 
-interface StaticPathsResponse {
-  fallback: boolean
-  paths: any
-}
+export default PostData
 
-export async function getStaticPaths(): Promise<StaticPathsResponse> {
+export const getStaticPaths: GetStaticPaths = async () => {
   const paths = await getAllPostIds()
 
   return {
@@ -44,20 +42,12 @@ export async function getStaticPaths(): Promise<StaticPathsResponse> {
   }
 }
 
-interface GetPostProps {
-  params: {
-    id: number
-  }
+interface Params extends ParsedUrlQuery {
+  id: string
 }
 
-interface StaticPropsResponse {
-  props: any
-  revalidate: number
-}
-
-export async function getStaticProps({
-  params
-}: GetPostProps): Promise<StaticPropsResponse> {
+export const getStaticProps: GetStaticProps = async (context) => {
+  const params = context.params as Params
   const post = await getPostData(params.id)
 
   return {

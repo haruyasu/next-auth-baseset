@@ -1,5 +1,7 @@
-import { ReactElement } from 'react'
+import { NextPage } from 'next'
 
-export default function Hero(): ReactElement {
+const Hero: NextPage = () => {
   return <div>Hero</div>
 }
+
+export default Hero

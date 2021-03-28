@@ -1,5 +1,5 @@
+import { NextPage } from 'next'
 import Link from 'next/link'
-import { ReactElement } from 'react'
 
 interface Props {
   post: {
@@ -7,10 +7,12 @@ interface Props {
   }
 }
 
-export default function Post({ post }: Props): ReactElement {
+const Post: NextPage<Props> = ({ post }) => {
   return (
     <Link href={`/posts/${post.id}`}>
       <div className="p-4 cursor-pointer sm:w-1/2 lg:w-1/4">post</div>
     </Link>
   )
 }
+
+export default Post

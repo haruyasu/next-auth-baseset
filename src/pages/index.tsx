@@ -1,11 +1,15 @@
+import { GetStaticProps, NextPage } from 'next'
 import Head from 'next/head'
-import { ReactElement } from 'react'
 
 import Hero from '../components/home/hero'
 import Post from '../components/post/post'
-import { getAllPostsData } from '../lib/posts'
+import { getAllPostsData, PostsData } from '../lib/posts'
 
-export default function Home({ posts }: any): ReactElement {
+interface Props {
+  posts: PostsData[]
+}
+
+const Home: NextPage<Props> = ({ posts }) => {
   return (
     <div>
       <Head>
@@ -22,12 +26,9 @@ export default function Home({ posts }: any): ReactElement {
   )
 }
 
-interface StaticPropsResponse {
-  props: any
-  revalidate: number
-}
+export default Home
 
-export async function getStaticProps(): Promise<StaticPropsResponse> {
+export const getStaticProps: GetStaticProps<Props> = async () => {
   const posts = await getAllPostsData()
 
   return {
