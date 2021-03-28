@@ -56,7 +56,7 @@ export async function getAllPostIds(): Promise<AllPostIdsResponse[]> {
     }
   ]
 
-  return posts.map((post: any) => {
+  return posts.map((post: PostsData) => {
     return {
       params: {
         id: String(post.id)

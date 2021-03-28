@@ -1,13 +1,30 @@
-import { useEffect } from 'react'
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
+import { ParsedUrlQuery } from 'querystring'
+import { useEffect } from 'react'
 import useSWR from 'swr'
+
 import { getAllTaskIds, getTaskData } from '../../lib/tasks'
 
-const fetcher = (url) => fetch(url).then((res) => res.json())
+interface TasksData {
+  created_at: string
+  id: number
+  title: string
+}
+
+const fetcher = async (url: string): Promise<TasksData> => {
+  const res = await fetch(url).then(async (res) => await res.json())
+  return res
+}
 
 const SERVERURL = 'http://127.0.0.1:8000/'
 
-export default function Post({ staticTask, id }) {
+interface Props {
+  id: number
+  staticTask: TasksData
+}
+
+const Post: NextPage<Props> = ({ id, staticTask }) => {
   const router = useRouter()
   const { data: task, mutate } = useSWR(
     `${SERVERURL}api/detail-task/${id}`,
@@ -18,9 +35,11 @@ export default function Post({ staticTask, id }) {
   )
 
   useEffect(() => {
-    mutate()
+    // eslint-disable-next-line no-void
+    void mutate()
   }, [])
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (router.isFallback || !task) {
     return <div>Loading...</div>
   }
@@ -37,7 +56,9 @@ export default function Post({ staticTask, id }) {
   )
 }
 
-export async function getStaticPaths() {
+export default Post
+
+export const getStaticPaths: GetStaticPaths = async () => {
   const paths = await getAllTaskIds()
 
   return {
@@ -45,7 +66,13 @@ export async function getStaticPaths() {
     fallback: true
   }
 }
-export async function getStaticProps({ params }) {
+
+interface Params extends ParsedUrlQuery {
+  id: string
+}
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const params = context.params as Params
   const staticTask = await getTaskData(params.id)
 
   return {
